@@ -1,3 +1,5 @@
+# Aluno: Gabriel Rodrigues de Souza RA: 118038
+
 .section .data
     menu_prompt:     .asciz "\nEscolha uma opção:\n1 - Maiores e menores com valor pivô\n2 - Buscar elemento no vetor (Busca Binária)\n3 - Sair\nOpção: "
     prompt_valor:    .asciz "Digite um valor: "
@@ -34,7 +36,7 @@ main:
     movl %esp, %ebp
 
 menu_loop:
-    # Exibir menu e ler opção
+    # Exibe o menu e le opção
     pushl $menu_prompt
     call printf
     addl $4, %esp
@@ -44,7 +46,7 @@ menu_loop:
     call scanf
     addl $8, %esp
 
-    # Verificar opção escolhida
+    # Verifica a opção escolhida
     movl opcao, %eax
     cmpl $1, %eax
     je opcao_pivo
@@ -53,7 +55,7 @@ menu_loop:
     cmpl $3, %eax
     je fim_programa
 
-    jmp menu_loop  # Opção inválida, voltar ao menu
+    jmp menu_loop  # Opção inválida, volta ao menu
 
 opcao_pivo:
     call maiores_menores_pivo
@@ -84,7 +86,7 @@ ler_loop_pivo:
     cmpl $8, %esi
     jl ler_loop_pivo
 
-    # Ler valor pivô
+    # Le o valor pivô inserido pelo usuário
     pushl $prompt_pivo
     call printf
     addl $4, %esp
@@ -94,7 +96,7 @@ ler_loop_pivo:
     call scanf
     addl $8, %esp
 
-    # Inicializar contadores
+    # Inicializa os contadores
     xorl %esi, %esi  # índice para valores
     xorl %edi, %edi  # índice para menores
     xorl %ebx, %ebx  # índice para maiores
@@ -122,7 +124,7 @@ prox_valor:
     cmpl $8, %esi
     jl comparar_loop
 
-    # Imprimir valores menores ou iguais
+    # Imprime os valores menores ou iguais
     pushl $msg_menores
     call printf
     addl $4, %esp
@@ -145,7 +147,7 @@ fim_menores:
     call printf
     addl $4, %esp
 
-    # Imprimir valores maiores
+    # Imprime os valores maiores
     pushl $msg_maiores
     call printf
     addl $4, %esp
@@ -175,7 +177,7 @@ busca_binaria:
     pushl %ebp
     movl %esp, %ebp
 
-    # Solicitar quantidade de elementos
+    # Solicita a quantidade de elementos do que o usuário deseja
     pushl $prompt_qtd
     call printf
     addl $4, %esp
@@ -185,7 +187,7 @@ busca_binaria:
     call scanf
     addl $8, %esp
 
-    # Ler elementos do vetor
+    # Le os elementos do vetor
     movl $0, %esi    # contador
 ler_loop_busca:
     pushl %esi
@@ -203,7 +205,7 @@ ler_loop_busca:
     cmpl qtd, %esi
     jl ler_loop_busca
 
-    # Avisar que está ordenando
+    # Mensagem que está ordenando
     pushl $msg_ordenando
     call printf
     addl $4, %esp
@@ -213,7 +215,7 @@ ler_loop_busca:
     decl %ecx        # número de passagens
     
 outer_loop:
-    pushl %ecx       # Salvar o contador de passagens
+    pushl %ecx       # Salva o contador de passagens
     movl $0, %esi    # índice atual
     
 inner_loop:
@@ -228,7 +230,7 @@ inner_loop:
     fstp %st(0)
     jae no_swap         # Se vetor[i+1] >= vetor[i], não troca
     
-    # Trocar elementos
+    # Troca os elementos
     flds vetor(, %esi, 4)
     flds vetor(, %edi, 4)
     fstps vetor(, %esi, 4)
@@ -239,7 +241,7 @@ no_swap:
     jmp inner_loop
 
 next_outer:
-    popl %ecx        # Restaurar o contador de passagens
+    popl %ecx        # Restaura o contador de passagens
     loop outer_loop
 
     # Imprimir vetor ordenado
@@ -265,7 +267,7 @@ fim_imprimir_vetor:
     call printf
     addl $4, %esp
 
-    # Solicitar valor a ser buscado
+    # Solicita o valor a ser buscado
     pushl $prompt_busca
     call printf
     addl $4, %esp
@@ -275,7 +277,7 @@ fim_imprimir_vetor:
     call scanf
     addl $8, %esp
 
-    # Realizar busca binária
+    # Realiza a busca binária
     movl $0, %esi        # início
     movl qtd, %edi
     decl %edi            # fim
@@ -305,7 +307,7 @@ maior_busca:
     jmp busca_loop
 
 encontrado:
-    # Elemento encontrado, preparar para imprimir
+    # Elemento encontrado, exibe mensagem
     flds vetor(, %eax, 4)
     subl $8, %esp
     fstpl (%esp)     # Valor encontrado
