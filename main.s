@@ -71,6 +71,7 @@ maiores_menores_pivo:
 
     # Ler 8 valores
     movl $0, %esi
+
 ler_loop_pivo:
     pushl $prompt_valor
     call printf
@@ -101,6 +102,7 @@ ler_loop_pivo:
     xorl %edi, %edi  # índice para menores
     xorl %ebx, %ebx  # índice para maiores
 
+# Compara cada valor com o pivô e distribui nos vetores 'menores' ou 'maiores'
 comparar_loop:
     flds pivo
     flds valores(, %esi, 4)
@@ -130,6 +132,7 @@ prox_valor:
     addl $4, %esp
 
     xorl %esi, %esi
+
 print_menores:
     cmpl %edi, %esi
     jge fim_menores
@@ -153,6 +156,7 @@ fim_menores:
     addl $4, %esp
 
     xorl %esi, %esi
+
 print_maiores:
     cmpl %ebx, %esi
     jge fim_maiores
@@ -189,6 +193,8 @@ busca_binaria:
 
     # Le os elementos do vetor
     movl $0, %esi    # contador
+
+# Le os elementos do vetor do usuário
 ler_loop_busca:
     pushl %esi
     pushl $prompt_elem
@@ -213,12 +219,14 @@ ler_loop_busca:
     # Ordenar o vetor (bubble sort)
     movl qtd, %ecx
     decl %ecx        # número de passagens
-    
+
+# outer_loop e inner_loop fazem parte do bubble sort    
 outer_loop:
     pushl %ecx       # Salva o contador de passagens
     movl $0, %esi    # índice atual
     
-inner_loop:
+# compara os elementos adjacentes e troca se necessário
+inner_loop: 
     movl %esi, %edi
     incl %edi        # próximo índice
     cmpl qtd, %edi
@@ -235,14 +243,16 @@ inner_loop:
     flds vetor(, %edi, 4)
     fstps vetor(, %esi, 4)
     fstps vetor(, %edi, 4)
-    
+
+# Se n tiver troca, incrementa o índice e repete   
 no_swap:
     incl %esi
     jmp inner_loop
 
+# Passou pelo vetoro inteiro
 next_outer:
     popl %ecx        # Restaura o contador de passagens
-    loop outer_loop
+    loop outer_loop # decrementa %ecx e repete se não for zero
 
     # Imprimir vetor ordenado
     pushl $msg_vetor_ordenado
@@ -250,8 +260,10 @@ next_outer:
     addl $4, %esp
 
     xorl %esi, %esi
+
+# Imprime o vetor ordenado
 imprimir_vetor:
-    cmpl qtd, %esi
+    cmpl qtd, %esi # verifica se é maior ou igual a qtd
     jge fim_imprimir_vetor
     flds vetor(, %esi, 4)
     subl $8, %esp
@@ -282,6 +294,7 @@ fim_imprimir_vetor:
     movl qtd, %edi
     decl %edi            # fim
 
+# busca binaria
 busca_loop:
     cmpl %edi, %esi
     jg nao_encontrado
@@ -302,6 +315,7 @@ busca_loop:
     leal -1(%eax), %edi   # fim = meio - 1
     jmp busca_loop
 
+# Se for maior
 maior_busca:
     leal 1(%eax), %esi    # início = meio + 1
     jmp busca_loop
